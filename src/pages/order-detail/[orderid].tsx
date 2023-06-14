@@ -2,7 +2,9 @@ import NavPage from '@/components/NavPage';
 import ReviewBoard from '@/components/ReviewBoard';
 import config from '@/config/config';
 import { poppinsFont } from '@/lib/nextFonts';
-import useAuth from '@/lib/use-custom-hooks/useAuth';
+// import useAuth from '@/lib/use-custom-hooks/useAuth';
+import { useAppSelector } from '@/redux-app/redux-typed-hook/typedHooks';
+import { authSelector } from '@/redux-app/slices/authSlice';
 import type { OrderData, WebResponse } from '@/types/types';
 import type { AxiosResponse } from 'axios';
 import axios from 'axios';
@@ -32,15 +34,16 @@ const swrFetcher = (url: string) =>
     .then((res) => res.data);
 
 export default function OrderDetail() {
-  const { authFailed, authLoading } = useAuth();
+  // const { authFailed, authLoading } = useAuth();
+  const { id: userId } = useAppSelector(authSelector);
 
   const [openReview, setOpenReview] = useState<boolean>(() => false);
   const [disableReview, setDisableReview] = useState<boolean>(() => false);
 
   const nextRouter = useRouter();
   const { data: orderGetResponse } = useSWR(
-    !authLoading && !authFailed && nextRouter.query.orderid
-      ? `${config.HAPPY_BASE_URL_API}/orders/${
+    userId && nextRouter.query.orderid
+      ? `${config.HAPPY_BASE_URL_API}/orders/userId:${userId}/orderId:${
           nextRouter.query.orderid as string
         }`
       : null,
@@ -48,7 +51,7 @@ export default function OrderDetail() {
   );
 
   const orderResData = orderGetResponse?.data;
-  const adminWhatsappPhone = '6285795702195';
+  const adminWhatsappPhone = '08123456789';
   const adminWhatsappLink = `https://wa.me/${adminWhatsappPhone}?text=Halo!%20Saya%20ingin%20melakukan%20verifikasi%20pembayaran%20dan%20berikut%20detail%20pemesanan%20saya%3A%0A%0A**ID%20Pemesanan**%0AABC123%0A%0A**Total%20Pembayaran**%0ARp%2011.000%2C00%0A%0ABerikut%20bukti%20gambar%20hasil%20transaksi%20pembayaran%20saya...%0ATerima%20kasih.`;
 
   const isExpired = () => {
@@ -64,7 +67,7 @@ export default function OrderDetail() {
     if (!orderResData) return;
 
     await axios.delete<AxiosResponse<WebResponse<string>>>(
-      `${config.HAPPY_BASE_URL_API}/orders/${orderResData.idOrder}`,
+      `${config.HAPPY_BASE_URL_API}/orders/cancelOrder/userId:${userId}/orderId:${orderResData.idOrder}`,
       {
         withCredentials: true,
       }
@@ -91,10 +94,10 @@ export default function OrderDetail() {
   useEffect(() => {
     const redirect = async () => nextRouter.replace('/login');
 
-    if (authFailed) {
+    if (!userId) {
       void redirect();
     }
-  }, [authFailed, nextRouter]);
+  }, [nextRouter, userId]);
 
   return (
     <>
@@ -299,21 +302,21 @@ export default function OrderDetail() {
                         <h3 className="font-poppins text-lg font-bold">
                           Nama Bank
                         </h3>
-                        <p>BNI</p>
+                        <p>XYZ</p>
                       </section>
 
                       <section>
                         <h3 className="font-poppins text-lg font-bold">
                           Nomor Rekening
                         </h3>
-                        <p>1234567890</p>
+                        <p>12345678</p>
                       </section>
 
                       <section>
                         <h3 className="font-poppins text-lg font-bold">
                           Nama Pemilik Rekening
                         </h3>
-                        <p>Foo Bar Baz</p>
+                        <p>HappyStore</p>
                       </section>
                     </div>
 

@@ -1,5 +1,7 @@
 import happyLogoLight from '@/assets/logos/happy-logo-light.png';
 import config from '@/config/config';
+import { useAppSelector } from '@/redux-app/redux-typed-hook/typedHooks';
+import { authSelector } from '@/redux-app/slices/authSlice';
 import type { WebResponse } from '@/types/types';
 import type { AxiosResponse } from 'axios';
 import axios from 'axios';
@@ -27,14 +29,18 @@ export default function CheckoutBoard({
   totalProduct,
 }: CheckoutBoardProps) {
   const nextRouter = useRouter();
+  const { id } = useAppSelector(authSelector);
 
   const checkoutHandler = async () => {
     document.body.classList.remove('overflow-hidden');
+
+    if (!id) return;
 
     try {
       await axios.post(
         `${config.HAPPY_BASE_URL_API}/orders`,
         {
+          idUser: parseInt(id),
           idProduct: productId,
           quantity: totalProduct,
         },

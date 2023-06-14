@@ -1,5 +1,7 @@
 import happyLogoLight from '@/assets/logos/happy-logo-light.png';
 import config from '@/config/config';
+import { useAppSelector } from '@/redux-app/redux-typed-hook/typedHooks';
+import { authSelector } from '@/redux-app/slices/authSlice';
 import axios from 'axios';
 import cn from 'classnames';
 import Image from 'next/image';
@@ -25,16 +27,18 @@ export default function ReviewBoard({
 }: ReviewBoardProps) {
   const [feedback, setFeedback] = useState<string>(() => '');
 
+  const { id } = useAppSelector(authSelector);
   const nextRouter = useRouter();
 
   const reviewHandler = async () => {
     const orderId = nextRouter.query.orderid as string;
 
-    if (orderId) {
+    if (id && orderId) {
       try {
         await axios.post(
           `${config.HAPPY_BASE_URL_API}/feedbacks`,
           {
+            idUser: id,
             idProduct: productId,
             idOrder: orderId,
             feedback: feedback,

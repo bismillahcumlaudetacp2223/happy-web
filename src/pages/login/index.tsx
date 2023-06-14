@@ -10,6 +10,7 @@ import {
   setEmail,
   setFullname,
   setId,
+  setToken,
   setUsername,
 } from '@/redux-app/slices/authSlice';
 import type { UserCredential, WebResponse } from '@/types/types';
@@ -75,6 +76,7 @@ export default function Login() {
       reduxDispatch(setUsername(loginResData.username));
       reduxDispatch(setFullname(loginResData.fullname));
       reduxDispatch(setEmail(loginResData.email));
+      reduxDispatch(setToken(loginResData.token));
 
       await nextRouter.replace('/');
     } catch (error) {

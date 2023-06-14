@@ -2,7 +2,7 @@ import NavPage from '@/components/NavPage';
 import TransactionCard from '@/components/TransactionCard';
 import config from '@/config/config';
 import { poppinsFont } from '@/lib/nextFonts';
-import useAuth from '@/lib/use-custom-hooks/useAuth';
+// import useAuth from '@/lib/use-custom-hooks/useAuth';
 import { useAppSelector } from '@/redux-app/redux-typed-hook/typedHooks';
 import { authSelector } from '@/redux-app/slices/authSlice';
 import type { OrderData, WebResponse } from '@/types/types';
@@ -23,23 +23,20 @@ const swrFetcher = (url: string) =>
 
 export default function Transaction() {
   const nextRouter = useRouter();
-  const { authFailed, authLoading } = useAuth();
+  // const { authFailed, authLoading } = useAuth();
+  const { id } = useAppSelector(authSelector);
 
   const { data: ordersGetResponse, isLoading } = useSWR(
-    authLoading || authFailed
-      ? null
-      : `${config.HAPPY_BASE_URL_API}/orders/orderByIdUser`,
+    !id ? 'null' : `${config.HAPPY_BASE_URL_API}/orders/orderByIdUser/${id}`,
     swrFetcher
   );
 
-  const { id } = useAppSelector(authSelector);
-
   useEffect(() => {
     const redirect = async () => nextRouter.replace('/login');
-    if (!authLoading && authFailed) {
+    if (!id) {
       void redirect();
     }
-  }, [authFailed, authLoading, nextRouter]);
+  }, [id, nextRouter]);
 
   return (
     <div className={`${poppinsFont.variable}`}>
@@ -52,7 +49,7 @@ export default function Transaction() {
         />
       </Head>
 
-      {!isEmpty(id) && !isLoading && !authLoading && (
+      {!isEmpty(id) && !isLoading && (
         <>
           <header>
             <NavPage />

@@ -5,6 +5,7 @@ export interface UserCredential {
   fullname: string;
   username: string;
   email: string;
+  token: string;
 }
 
 export interface FeedbackData {

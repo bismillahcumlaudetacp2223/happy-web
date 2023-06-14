@@ -7,6 +7,7 @@ interface AuthProps {
   fullname: string;
   username: string;
   email: string;
+  token: string;
 }
 
 const initialState: AuthProps = {
@@ -14,6 +15,7 @@ const initialState: AuthProps = {
   fullname: '',
   username: '',
   email: '',
+  token: '',
 };
 
 export const authSlice = createSlice({
@@ -32,10 +34,14 @@ export const authSlice = createSlice({
     setEmail: (state, action: PayloadAction<string>) => {
       state.email = action.payload;
     },
+    setToken: (state, action: PayloadAction<string>) => {
+      state.token = action.payload;
+    },
   },
 });
 
-export const { setId, setFullname, setUsername, setEmail } = authSlice.actions;
+export const { setId, setFullname, setUsername, setEmail, setToken } =
+  authSlice.actions;
 
 export const authSelector = (state: RootState) => state.auth;
 

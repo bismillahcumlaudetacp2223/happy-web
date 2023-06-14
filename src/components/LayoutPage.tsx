@@ -1,5 +1,5 @@
 import { interFont } from '@/lib/nextFonts';
-import useAuth from '@/lib/use-custom-hooks/useAuth';
+// import useAuth from '@/lib/use-custom-hooks/useAuth';
 import { ReactNode } from 'react';
 
 interface LayoutPageProps {
@@ -7,7 +7,7 @@ interface LayoutPageProps {
 }
 
 export default function LayoutPage({ children }: LayoutPageProps) {
-  useAuth();
+  // useAuth();
 
   return <div className={`${interFont.variable} font-inter`}>{children}</div>;
 }
