@@ -1,0 +1,10 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: happy-web-app
+spec:
+  host: happy-web-app-deployment.monitoring.svc.cluster.local
+  subsets:
+    - name: happy-web-app
+      labels:
+        app: happy-web-app

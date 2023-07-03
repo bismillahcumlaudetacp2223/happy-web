@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: happy-web-app-deployment
-  namespace: default
   labels:
     app: happy-web-app
 spec:
@@ -20,33 +19,16 @@ spec:
         image: syahdaromstudenttelu/happy-web
         resources:
           requests:
-            cpu: 25m
+            cpu: 20m
             memory: 25Mi
           limits:
-            cpu: 100m
-            memory: 100Mi
-        livenessProbe:
-          tcpSocket:
-            port: 80
-          initialDelaySeconds: 5
-          timeoutSeconds: 5
-          successThreshold: 1
-          failureThreshold: 3
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /_status/healthz
-            port: 80
-          initialDelaySeconds: 5
-          timeoutSeconds: 2
-          successThreshold: 1
-          failureThreshold: 3
-          periodSeconds: 10
+            cpu: 50m
+            memory: 50Mi
         ports:
         - containerPort: 3000
         env:
         - name: NEXT_PUBLIC_HAPPY_BASE_URL_API
-          value: http://localhost:55004/api
+          value: http://35.223.42.148:55000/api
         - name: NODE_ENV
           value: "production"
         - name: PORT
